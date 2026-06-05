@@ -148,7 +148,7 @@ export function FakeDapp() {
           <CardHeader>
             <CardTitle>Connect Wallet</CardTitle>
             <CardDescription>
-              Sign in with your midnightOS passkey — no extensions, no seed phrases
+              Sign in with your EffectStream passkey — no extensions, no seed phrases
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-3">
