@@ -1,13 +1,7 @@
 {
   "$schema": "node_modules/wrangler/config-schema.json",
-  "name": "fake-app",
-  "account_id": "864bff2c217f01d65488f7f5d61c5e55",
-  "routes": [
-    {
-      "pattern": "fake-app.rvcas.dev",
-      "custom_domain": true,
-    },
-  ],
+  "name": "wallet-passkeys-app",
+  "account_id": "28ea08e36bc67a4f136df373255ce175",
   "compatibility_date": "2025-09-27",
   "observability": {
     "enabled": true,

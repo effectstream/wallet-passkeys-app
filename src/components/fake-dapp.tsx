@@ -2,7 +2,9 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 
-const PASSKEYS_ORIGIN = "https://passkeys.rvcas.dev";
+// Points at the EffectStream-hosted wallet-passkeys worker. Override locally
+// by editing this constant if you're running wallet-passkeys on localhost.
+const PASSKEYS_ORIGIN = "https://wallet-passkeys.ac-edward.workers.dev";
 const EMBED_URL = `${PASSKEYS_ORIGIN}/embed`;
 
 type KeyAuthorization = {
@@ -28,10 +30,14 @@ type SignResult = {
 };
 
 export function FakeDapp() {
+  // `iframeMounted` keeps the iframe in the DOM (its JS context holds the
+  // access key, so it must survive after auth to handle sign requests).
+  // `popupVisible` controls whether the floating wallet dock is shown.
   const [iframeMounted, setIframeMounted] = useState(false);
+  const [popupVisible, setPopupVisible] = useState(false);
   const [authResult, setAuthResult] = useState<AuthResult | null>(null);
   const [error, setError] = useState<string | null>(null);
-  const [messageToSign, setMessageToSign] = useState("Hello from fake-app!");
+  const [messageToSign, setMessageToSign] = useState("Hello from the Demo App!");
   const [signResult, setSignResult] = useState<SignResult | null>(null);
   const [signing, setSigning] = useState(false);
   const iframeRef = useRef<HTMLIFrameElement>(null);
@@ -47,6 +53,17 @@ export function FakeDapp() {
       if (data.type === "authenticated") {
         setAuthResult(data.payload);
         setError(null);
+        // Auth done — collapse the floating popup, but keep the iframe mounted
+        // (hidden) so its access key can still sign later requests.
+        setPopupVisible(false);
+      } else if (data.type === "close") {
+        // User pressed Cancel / OK inside the wallet popup. If they never
+        // authenticated, tear the iframe down entirely; otherwise just hide.
+        setPopupVisible(false);
+        setAuthResult((prev) => {
+          if (!prev) setIframeMounted(false);
+          return prev;
+        });
       } else if (data.type === "error") {
         setError(data.payload?.message ?? "Authentication failed");
       } else if (data.type === "signed") {
@@ -66,12 +83,14 @@ export function FakeDapp() {
 
   const handleConnect = useCallback(() => {
     setIframeMounted(true);
+    setPopupVisible(true);
     setError(null);
   }, []);
 
   function handleDisconnect() {
     setAuthResult(null);
     setIframeMounted(false);
+    setPopupVisible(false);
     setSignResult(null);
     setError(null);
   }
@@ -117,14 +136,19 @@ export function FakeDapp() {
   }, [messageToSign]);
 
   return (
-    <div className="mx-auto max-w-lg space-y-4 p-4">
-      <div className="flex items-center justify-between">
-        <div className="space-y-1">
-          <h1 className="font-heading text-xl font-semibold">Fake dApp</h1>
-          <p className="text-sm text-muted-foreground">
+    <div className="mx-auto max-w-2xl space-y-6 p-6 pt-12">
+      {/* Editorial wordmark header */}
+      <div className="flex items-end justify-between gap-6">
+        <div className="space-y-3">
+          <span className="es-chip">Demo dApp · Issue 01</span>
+          <h1 className="es-wordmark">
+            EFFECT<span className="accent">STREAM</span>
+            <br />DEMO<span className="accent">.</span>
+          </h1>
+          <p className="text-sm text-muted-foreground max-w-md">
             {authResult
-              ? "Connected via passkeys.rvcas.dev"
-              : "A third-party application that authenticates via cross-origin iframe"}
+              ? "Connected · access key issued by wallet-passkeys"
+              : "A consumer application that authenticates users through a cross-origin wallet iframe. This page holds no key material."}
           </p>
         </div>
         {authResult && (
@@ -133,6 +157,7 @@ export function FakeDapp() {
           </Button>
         )}
       </div>
+      <div className="es-rule" />
 
       {/* Connect button — shown before iframe is mounted */}
       {!iframeMounted && !authResult && (
@@ -140,7 +165,7 @@ export function FakeDapp() {
           <CardHeader>
             <CardTitle>Connect Wallet</CardTitle>
             <CardDescription>
-              Sign in with your midnightOS passkey — no extensions, no seed phrases
+              Sign in with your EffectStream passkey — no extensions, no seed phrases
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-3">
@@ -150,36 +175,26 @@ export function FakeDapp() {
         </Card>
       )}
 
-      {/* Auth iframe — visible during auth, hidden after */}
+      {error && !authResult && (
+        <p className="text-xs text-destructive">{error}</p>
+      )}
+
+      {/* Floating wallet popup — fixed top-right like a browser-extension
+          wallet. The iframe stays mounted (so its access key survives for
+          later sign requests) but the dock hides once the popup is dismissed.
+          The wallet's own header / body / OK-Cancel footer live inside. */}
       {iframeMounted && (
-        <Card className={authResult ? "hidden" : ""}>
-          <CardHeader>
-            <CardTitle>midnightOS Wallet</CardTitle>
-            <CardDescription>Authenticating via passkeys.rvcas.dev</CardDescription>
-          </CardHeader>
-          <CardContent>
-            {error && !authResult && (
-              <p className="text-xs text-destructive mb-3">{error}</p>
-            )}
-            <iframe
-              ref={iframeRef}
-              src={EMBED_URL}
-              allow="publickey-credentials-create; publickey-credentials-get"
-              className="w-full rounded-md border border-border"
-              style={{ height: 240 }}
-              title="midnightOS Passkey Authentication"
-            />
-            {!authResult && (
-              <Button
-                variant="outline"
-                className="mt-3"
-                onClick={() => setIframeMounted(false)}
-              >
-                Cancel
-              </Button>
-            )}
-          </CardContent>
-        </Card>
+        <div
+          className="wallet-dock"
+          style={{ display: popupVisible ? "block" : "none" }}
+        >
+          <iframe
+            ref={iframeRef}
+            src={EMBED_URL}
+            allow="publickey-credentials-create; publickey-credentials-get"
+            title="EffectStream Passkeys wallet"
+          />
+        </div>
       )}
 
       {/* Identity card — shown after auth */}
