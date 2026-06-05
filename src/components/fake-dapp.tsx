@@ -2,7 +2,9 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 
-const PASSKEYS_ORIGIN = "https://passkeys.rvcas.dev";
+// Points at the EffectStream-hosted wallet-passkeys worker. Override locally
+// by editing this constant if you're running wallet-passkeys on localhost.
+const PASSKEYS_ORIGIN = "https://wallet-passkeys.ac-edward.workers.dev";
 const EMBED_URL = `${PASSKEYS_ORIGIN}/embed`;
 
 type KeyAuthorization = {
@@ -120,10 +122,10 @@ export function FakeDapp() {
     <div className="mx-auto max-w-lg space-y-4 p-4">
       <div className="flex items-center justify-between">
         <div className="space-y-1">
-          <h1 className="font-heading text-xl font-semibold">Fake dApp</h1>
+          <h1 className="font-heading text-xl font-semibold">EffectStream Demo App</h1>
           <p className="text-sm text-muted-foreground">
             {authResult
-              ? "Connected via passkeys.rvcas.dev"
+              ? "Connected via wallet-passkeys"
               : "A third-party application that authenticates via cross-origin iframe"}
           </p>
         </div>
@@ -154,8 +156,8 @@ export function FakeDapp() {
       {iframeMounted && (
         <Card className={authResult ? "hidden" : ""}>
           <CardHeader>
-            <CardTitle>midnightOS Wallet</CardTitle>
-            <CardDescription>Authenticating via passkeys.rvcas.dev</CardDescription>
+            <CardTitle>EffectStream Wallet</CardTitle>
+            <CardDescription>Authenticating via wallet-passkeys</CardDescription>
           </CardHeader>
           <CardContent>
             {error && !authResult && (
