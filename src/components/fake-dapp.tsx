@@ -30,10 +30,14 @@ type SignResult = {
 };
 
 export function FakeDapp() {
+  // `iframeMounted` keeps the iframe in the DOM (its JS context holds the
+  // access key, so it must survive after auth to handle sign requests).
+  // `popupVisible` controls whether the floating wallet dock is shown.
   const [iframeMounted, setIframeMounted] = useState(false);
+  const [popupVisible, setPopupVisible] = useState(false);
   const [authResult, setAuthResult] = useState<AuthResult | null>(null);
   const [error, setError] = useState<string | null>(null);
-  const [messageToSign, setMessageToSign] = useState("Hello from fake-app!");
+  const [messageToSign, setMessageToSign] = useState("Hello from the Demo App!");
   const [signResult, setSignResult] = useState<SignResult | null>(null);
   const [signing, setSigning] = useState(false);
   const iframeRef = useRef<HTMLIFrameElement>(null);
@@ -49,6 +53,17 @@ export function FakeDapp() {
       if (data.type === "authenticated") {
         setAuthResult(data.payload);
         setError(null);
+        // Auth done — collapse the floating popup, but keep the iframe mounted
+        // (hidden) so its access key can still sign later requests.
+        setPopupVisible(false);
+      } else if (data.type === "close") {
+        // User pressed Cancel / OK inside the wallet popup. If they never
+        // authenticated, tear the iframe down entirely; otherwise just hide.
+        setPopupVisible(false);
+        setAuthResult((prev) => {
+          if (!prev) setIframeMounted(false);
+          return prev;
+        });
       } else if (data.type === "error") {
         setError(data.payload?.message ?? "Authentication failed");
       } else if (data.type === "signed") {
@@ -68,12 +83,14 @@ export function FakeDapp() {
 
   const handleConnect = useCallback(() => {
     setIframeMounted(true);
+    setPopupVisible(true);
     setError(null);
   }, []);
 
   function handleDisconnect() {
     setAuthResult(null);
     setIframeMounted(false);
+    setPopupVisible(false);
     setSignResult(null);
     setError(null);
   }
@@ -158,31 +175,25 @@ export function FakeDapp() {
         </Card>
       )}
 
-      {/* Auth iframe — wrapped in an unmistakable "wallet popup" frame so
-          the boundary between this page and the wallet origin is obvious. */}
+      {error && !authResult && (
+        <p className="text-xs text-destructive">{error}</p>
+      )}
+
+      {/* Floating wallet popup — fixed top-right like a browser-extension
+          wallet. The iframe stays mounted (so its access key survives for
+          later sign requests) but the dock hides once the popup is dismissed.
+          The wallet's own header / body / OK-Cancel footer live inside. */}
       {iframeMounted && (
-        <div className={authResult ? "hidden" : "space-y-3 mt-8"}>
-          {error && !authResult && (
-            <p className="text-xs text-destructive">{error}</p>
-          )}
-          <div className="wallet-popup-frame">
-            <iframe
-              ref={iframeRef}
-              src={EMBED_URL}
-              allow="publickey-credentials-create; publickey-credentials-get"
-              className="w-full block"
-              style={{ height: 320, border: 0 }}
-              title="wallet-passkeys auth"
-            />
-          </div>
-          {!authResult && (
-            <Button
-              variant="outline"
-              onClick={() => setIframeMounted(false)}
-            >
-              Cancel
-            </Button>
-          )}
+        <div
+          className="wallet-dock"
+          style={{ display: popupVisible ? "block" : "none" }}
+        >
+          <iframe
+            ref={iframeRef}
+            src={EMBED_URL}
+            allow="publickey-credentials-create; publickey-credentials-get"
+            title="EffectStream Passkeys wallet"
+          />
         </div>
       )}
 
