@@ -119,14 +119,19 @@ export function FakeDapp() {
   }, [messageToSign]);
 
   return (
-    <div className="mx-auto max-w-lg space-y-4 p-4">
-      <div className="flex items-center justify-between">
-        <div className="space-y-1">
-          <h1 className="font-heading text-xl font-semibold">EffectStream Demo App</h1>
-          <p className="text-sm text-muted-foreground">
+    <div className="mx-auto max-w-2xl space-y-6 p-6 pt-12">
+      {/* Editorial wordmark header */}
+      <div className="flex items-end justify-between gap-6">
+        <div className="space-y-3">
+          <span className="es-chip">Demo dApp · Issue 01</span>
+          <h1 className="es-wordmark">
+            EFFECT<span className="accent">STREAM</span>
+            <br />DEMO<span className="accent">.</span>
+          </h1>
+          <p className="text-sm text-muted-foreground max-w-md">
             {authResult
-              ? "Connected via wallet-passkeys"
-              : "A third-party application that authenticates via cross-origin iframe"}
+              ? "Connected · access key issued by wallet-passkeys"
+              : "A consumer application that authenticates users through a cross-origin wallet iframe. This page holds no key material."}
           </p>
         </div>
         {authResult && (
@@ -135,6 +140,7 @@ export function FakeDapp() {
           </Button>
         )}
       </div>
+      <div className="es-rule" />
 
       {/* Connect button — shown before iframe is mounted */}
       {!iframeMounted && !authResult && (
@@ -152,36 +158,32 @@ export function FakeDapp() {
         </Card>
       )}
 
-      {/* Auth iframe — visible during auth, hidden after */}
+      {/* Auth iframe — wrapped in an unmistakable "wallet popup" frame so
+          the boundary between this page and the wallet origin is obvious. */}
       {iframeMounted && (
-        <Card className={authResult ? "hidden" : ""}>
-          <CardHeader>
-            <CardTitle>EffectStream Wallet</CardTitle>
-            <CardDescription>Authenticating via wallet-passkeys</CardDescription>
-          </CardHeader>
-          <CardContent>
-            {error && !authResult && (
-              <p className="text-xs text-destructive mb-3">{error}</p>
-            )}
+        <div className={authResult ? "hidden" : "space-y-3 mt-8"}>
+          {error && !authResult && (
+            <p className="text-xs text-destructive">{error}</p>
+          )}
+          <div className="wallet-popup-frame">
             <iframe
               ref={iframeRef}
               src={EMBED_URL}
               allow="publickey-credentials-create; publickey-credentials-get"
-              className="w-full rounded-md border border-border"
-              style={{ height: 240 }}
-              title="midnightOS Passkey Authentication"
+              className="w-full block"
+              style={{ height: 320, border: 0 }}
+              title="wallet-passkeys auth"
             />
-            {!authResult && (
-              <Button
-                variant="outline"
-                className="mt-3"
-                onClick={() => setIframeMounted(false)}
-              >
-                Cancel
-              </Button>
-            )}
-          </CardContent>
-        </Card>
+          </div>
+          {!authResult && (
+            <Button
+              variant="outline"
+              onClick={() => setIframeMounted(false)}
+            >
+              Cancel
+            </Button>
+          )}
+        </div>
       )}
 
       {/* Identity card — shown after auth */}

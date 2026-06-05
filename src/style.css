@@ -6,78 +6,91 @@
 
 @custom-variant dark (&:is(.dark *));
 
+/* ─────────────────────────────────────────────────────────────────────────
+   Editorial / Bauhaus aesthetic — warm cream paper, deep black text, a
+   single confident orange accent, big bold display headings. Reads like
+   a magazine spread / consumer product. Intentionally the opposite end
+   of the visual spectrum from wallet-passkeys' green terminal so when the
+   iframe pops up inside this dApp the boundary is unmistakable.
+   ───────────────────────────────────────────────────────────────────────── */
 :root {
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.145 0.008 326);
+  --background: oklch(0.97 0.01 80);
+  --foreground: oklch(0.18 0.02 60);
   --card: oklch(1 0 0);
-  --card-foreground: oklch(0.145 0.008 326);
+  --card-foreground: oklch(0.18 0.02 60);
   --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.145 0.008 326);
-  --primary: oklch(0.5 0.134 242.749);
-  --primary-foreground: oklch(0.977 0.013 236.62);
-  --secondary: oklch(0.967 0.001 286.375);
-  --secondary-foreground: oklch(0.21 0.006 285.885);
-  --muted: oklch(0.96 0.003 325.6);
-  --muted-foreground: oklch(0.542 0.034 322.5);
-  --accent: oklch(0.96 0.003 325.6);
-  --accent-foreground: oklch(0.212 0.019 322.12);
-  --destructive: oklch(0.577 0.245 27.325);
-  --border: oklch(0.922 0.005 325.62);
-  --input: oklch(0.922 0.005 325.62);
-  --ring: oklch(0.711 0.019 323.02);
-  --chart-1: oklch(0.828 0.111 230.318);
-  --chart-2: oklch(0.685 0.169 237.323);
-  --chart-3: oklch(0.588 0.158 241.966);
-  --chart-4: oklch(0.5 0.134 242.749);
-  --chart-5: oklch(0.443 0.11 240.79);
-  --radius: 0.625rem;
-  --sidebar: oklch(0.985 0 0);
-  --sidebar-foreground: oklch(0.145 0.008 326);
-  --sidebar-primary: oklch(0.588 0.158 241.966);
-  --sidebar-primary-foreground: oklch(0.977 0.013 236.62);
-  --sidebar-accent: oklch(0.96 0.003 325.6);
-  --sidebar-accent-foreground: oklch(0.212 0.019 322.12);
-  --sidebar-border: oklch(0.922 0.005 325.62);
-  --sidebar-ring: oklch(0.711 0.019 323.02);
+  --popover-foreground: oklch(0.18 0.02 60);
+
+  --primary: oklch(0.68 0.20 45);
+  --primary-foreground: oklch(1 0 0);
+  --secondary: oklch(0.92 0.03 75);
+  --secondary-foreground: oklch(0.22 0.02 60);
+  --muted: oklch(0.94 0.02 75);
+  --muted-foreground: oklch(0.48 0.04 60);
+  --accent: oklch(0.92 0.03 75);
+  --accent-foreground: oklch(0.22 0.02 60);
+  --destructive: oklch(0.55 0.22 25);
+
+  --border: oklch(0.18 0.02 60 / 14%);
+  --input: oklch(0.18 0.02 60 / 10%);
+  --ring: oklch(0.68 0.20 45 / 45%);
+
+  --chart-1: oklch(0.68 0.20 45);
+  --chart-2: oklch(0.55 0.18 250);
+  --chart-3: oklch(0.82 0.18 95);
+  --chart-4: oklch(0.18 0.02 60);
+  --chart-5: oklch(0.58 0.18 15);
+
+  --radius: 0;
+
+  --sidebar: oklch(0.99 0.005 80);
+  --sidebar-foreground: oklch(0.18 0.02 60);
+  --sidebar-primary: oklch(0.68 0.20 45);
+  --sidebar-primary-foreground: oklch(1 0 0);
+  --sidebar-accent: oklch(0.92 0.03 75);
+  --sidebar-accent-foreground: oklch(0.22 0.02 60);
+  --sidebar-border: oklch(0.18 0.02 60 / 14%);
+  --sidebar-ring: oklch(0.68 0.20 45 / 45%);
 }
 
 .dark {
-  --background: oklch(0.145 0.008 326);
-  --foreground: oklch(0.985 0 0);
-  --card: oklch(0.212 0.019 322.12);
-  --card-foreground: oklch(0.985 0 0);
-  --popover: oklch(0.212 0.019 322.12);
-  --popover-foreground: oklch(0.985 0 0);
-  --primary: oklch(0.443 0.11 240.79);
-  --primary-foreground: oklch(0.977 0.013 236.62);
-  --secondary: oklch(0.274 0.006 286.033);
-  --secondary-foreground: oklch(0.985 0 0);
-  --muted: oklch(0.263 0.024 320.12);
-  --muted-foreground: oklch(0.711 0.019 323.02);
-  --accent: oklch(0.263 0.024 320.12);
-  --accent-foreground: oklch(0.985 0 0);
-  --destructive: oklch(0.704 0.191 22.216);
-  --border: oklch(1 0 0 / 10%);
+  --background: oklch(0.16 0.01 60);
+  --foreground: oklch(0.96 0.01 80);
+  --card: oklch(0.22 0.015 60);
+  --card-foreground: oklch(0.96 0.01 80);
+  --popover: oklch(0.22 0.015 60);
+  --popover-foreground: oklch(0.96 0.01 80);
+  --primary: oklch(0.72 0.22 45);
+  --primary-foreground: oklch(0.10 0 0);
+  --secondary: oklch(0.26 0.02 60);
+  --secondary-foreground: oklch(0.96 0.01 80);
+  --muted: oklch(0.24 0.02 60);
+  --muted-foreground: oklch(0.70 0.03 75);
+  --accent: oklch(0.26 0.02 60);
+  --accent-foreground: oklch(0.96 0.01 80);
+  --destructive: oklch(0.60 0.22 25);
+  --border: oklch(1 0 0 / 12%);
   --input: oklch(1 0 0 / 15%);
-  --ring: oklch(0.542 0.034 322.5);
-  --chart-1: oklch(0.828 0.111 230.318);
-  --chart-2: oklch(0.685 0.169 237.323);
-  --chart-3: oklch(0.588 0.158 241.966);
-  --chart-4: oklch(0.5 0.134 242.749);
-  --chart-5: oklch(0.443 0.11 240.79);
-  --sidebar: oklch(0.212 0.019 322.12);
-  --sidebar-foreground: oklch(0.985 0 0);
-  --sidebar-primary: oklch(0.685 0.169 237.323);
-  --sidebar-primary-foreground: oklch(0.293 0.066 243.157);
-  --sidebar-accent: oklch(0.263 0.024 320.12);
-  --sidebar-accent-foreground: oklch(0.985 0 0);
-  --sidebar-border: oklch(1 0 0 / 10%);
-  --sidebar-ring: oklch(0.542 0.034 322.5);
+  --ring: oklch(0.72 0.22 45 / 55%);
+  --chart-1: oklch(0.72 0.22 45);
+  --chart-2: oklch(0.65 0.20 250);
+  --chart-3: oklch(0.82 0.18 95);
+  --chart-4: oklch(0.96 0.01 80);
+  --chart-5: oklch(0.62 0.20 15);
+  --sidebar: oklch(0.22 0.015 60);
+  --sidebar-foreground: oklch(0.96 0.01 80);
+  --sidebar-primary: oklch(0.72 0.22 45);
+  --sidebar-primary-foreground: oklch(0.10 0 0);
+  --sidebar-accent: oklch(0.26 0.02 60);
+  --sidebar-accent-foreground: oklch(0.96 0.01 80);
+  --sidebar-border: oklch(1 0 0 / 12%);
+  --sidebar-ring: oklch(0.72 0.22 45 / 55%);
 }
 
 @theme inline {
-  --font-sans: "Inter Variable", sans-serif;
-  --font-heading: "Geist Variable", sans-serif;
+  --font-sans: "Space Grotesk", "Inter Variable", system-ui, sans-serif;
+  --font-heading: "Space Grotesk", "Geist Variable", system-ui, sans-serif;
+  --font-mono: ui-monospace, "JetBrains Mono", "SF Mono", Menlo, monospace;
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
@@ -109,23 +122,87 @@
   --color-card: var(--card);
   --color-foreground: var(--foreground);
   --color-background: var(--background);
-  --radius-sm: calc(var(--radius) * 0.6);
-  --radius-md: calc(var(--radius) * 0.8);
-  --radius-lg: var(--radius);
-  --radius-xl: calc(var(--radius) * 1.4);
-  --radius-2xl: calc(var(--radius) * 1.8);
-  --radius-3xl: calc(var(--radius) * 2.2);
-  --radius-4xl: calc(var(--radius) * 2.6);
+  --radius-sm: 0;
+  --radius-md: 0;
+  --radius-lg: 0;
+  --radius-xl: 0;
+  --radius-2xl: 0;
+  --radius-3xl: 0;
+  --radius-4xl: 0;
 }
 
-@layer base {
-  * {
-    @apply border-border outline-ring/50;
-  }
-  body {
-    @apply bg-background text-foreground;
-  }
-  html {
-    @apply font-sans;
-  }
+html, body {
+  font-family: var(--font-sans);
+  background: var(--background);
+  color: var(--foreground);
+}
+
+h1, h2, h3, [data-slot="card-title"] {
+  font-family: var(--font-heading);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.es-wordmark {
+  font-family: var(--font-heading);
+  font-weight: 700;
+  letter-spacing: -0.04em;
+  font-size: clamp(2.5rem, 6vw, 4.5rem);
+  line-height: 0.92;
+  text-transform: uppercase;
+}
+.es-wordmark .accent { color: var(--primary); }
+
+.es-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  background: var(--foreground);
+  color: var(--background);
+  padding: 0.2rem 0.55rem;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+.es-chip.primary { background: var(--primary); color: var(--primary-foreground); }
+
+.es-rule {
+  height: 6px;
+  background: linear-gradient(
+    90deg,
+    var(--primary) 0 24%,
+    var(--foreground) 24% 28%,
+    transparent 28% 100%
+  );
+  margin: 1.25rem 0 1.5rem;
+}
+
+.wallet-popup-frame {
+  border: 3px solid var(--foreground);
+  background: #0a0a0a;
+  box-shadow: 10px 10px 0 var(--primary);
+  position: relative;
+}
+.wallet-popup-frame::before {
+  content: "WALLET IFRAME · wallet-passkeys.ac-edward.workers.dev";
+  position: absolute;
+  top: -10px;
+  left: 12px;
+  background: var(--primary);
+  color: var(--primary-foreground);
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  font-weight: 700;
+  padding: 2px 8px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+button[data-slot="button"].bg-primary {
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  font-size: 0.78rem;
 }
